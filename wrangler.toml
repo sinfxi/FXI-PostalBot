@@ -1,0 +1,4 @@
+name = "fxi-postalbot"
+main = "src/index.js"
+compatibility_date = "2026-10-30"
+workers_dev = true
