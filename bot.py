@@ -67,10 +67,11 @@ async def reverse_geocode(latitude: float, longitude: float) -> dict[str, Any]:
         }
         headers = {"User-Agent": USER_AGENT}
 
+        # Record the attempt before the network call so timeouts also count toward the rate limit.
+        _last_nominatim_request = time.monotonic()
         try:
             async with httpx.AsyncClient(timeout=REQUEST_TIMEOUT, headers=headers) as client:
                 response = await client.get(NOMINATIM_URL, params=params)
-                _last_nominatim_request = time.monotonic()
                 response.raise_for_status()
                 data = response.json()
         except httpx.TimeoutException as exc:
