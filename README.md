@@ -1,2 +1,69 @@
-# FXI-PostalBot
-Telegram bot for retrieving postal codes from geographic coordinates
+# FXI PostalBot 📮
+
+ربات تلگرام برای بررسی کد پستیِ ثبت‌شده برای یک موقعیت جغرافیایی با استفاده از داده‌های OpenStreetMap / Nominatim.
+
+## امکانات
+
+- دریافت موقعیت از طریق دکمه ارسال Location تلگرام
+- جست‌وجوی معکوس نشانی با Nominatim
+- نمایش کد پستی در صورت موجود بودن در داده‌های نقشه
+- نمایش نشانی تقریبی و مدیریت خطاهای سرویس و timeout
+- کش ساده برای کاهش درخواست‌های تکراری
+- رعایت فاصله حداقل حدود یک ثانیه بین درخواست‌های Nominatim در یک نمونه از ربات
+- نگهداری توکن در متغیر محیطی، نه در کد
+
+> **مهم:** کد پستی برای همه نقاط در داده‌های نقشه وجود ندارد. نبودن کد پستی در پاسخ به معنی نداشتن کد پستی واقعی نیست. این ابزار غیررسمی است و اطلاعات آن ممکن است ناقص یا تقریبی باشد.
+
+## اجرای محلی
+
+به Python 3.10 یا جدیدتر نیاز داری.
+
+ساخت و فعال‌سازی محیط مجازی در ویندوز:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+در Linux/macOS:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+توکن ربات را از BotFather بگیر و در متغیر محیطی `BOT_TOKEN` قرار بده. توکن را در فایل‌های عمومی یا commitهای GitHub قرار نده.
+
+PowerShell:
+
+```powershell
+$env:BOT_TOKEN="YOUR_TELEGRAM_BOT_TOKEN"
+python bot.py
+```
+
+Linux/macOS:
+
+```bash
+export BOT_TOKEN="YOUR_TELEGRAM_BOT_TOKEN"
+python bot.py
+```
+
+بعد در تلگرام به ربات پیام `/start` بده و موقعیت را ارسال کن.
+
+## استقرار روی هاست
+
+این پروژه یک **worker دائمی** است. GitHub به‌تنهایی ربات را اجرا نمی‌کند؛ باید از سرویسی استفاده کنی که پردازش Python طولانی‌مدت را پشتیبانی کند.
+
+1. مخزن را به سرویس میزبانی وصل کن.
+2. دستور اجرا را `python bot.py` قرار بده (در صورت پشتیبانی، `Procfile` هم موجود است).
+3. در تنظیمات سرویس، یک متغیر محرمانه با نام `BOT_TOKEN` بساز و توکن ربات را فقط آنجا وارد کن.
+4. سرویس را Deploy کن و لاگ‌ها را برای خطاهای راه‌اندازی بررسی کن.
+
+## محدودیت‌ها و منبع داده
+
+این پروژه از سرویس عمومی Nominatim استفاده می‌کند. سیاست استفاده آن را رعایت کن و برای سرویس عمومی بار زیاد ایجاد نکن. محدودکننده درخواست در این کد در سطح یک پردازش است؛ اگر چند نمونه هم‌زمان اجرا شوند، به محدودسازی مشترک نیاز است.
+
+- مستندات Reverse API: https://nominatim.org/release-docs/latest/api/Reverse/
+- سیاست استفاده: https://operations.osmfoundation.org/policies/nominatim/
